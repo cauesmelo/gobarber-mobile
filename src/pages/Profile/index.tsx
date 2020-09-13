@@ -40,7 +40,7 @@ const SignUp: React.FC = () => {
   const inputNewPasswordRef = useRef<TextInput>(null);
   const inputConfirmPasswordRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(
+  const handleSubmit = useCallback(
     async (data: ProfileFormData) => {
       try {
         formRef.current?.setErrors({});
@@ -58,7 +58,7 @@ const SignUp: React.FC = () => {
           passwordConfirmation: Yup.string()
             .when('oldPassword', {
               is: (val) => !!val.length,
-              then: Yup.string().required('Campo obrigateorio'),
+              then: Yup.string().required('Campo obrigatorio'),
               otherwise: Yup.string(),
             })
             .oneOf([Yup.ref('password'), undefined], 'Confirmação incorreta'),
@@ -99,6 +99,10 @@ const SignUp: React.FC = () => {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
+
+          console.log(err);
+
+          return;
         }
 
         Alert.alert(
@@ -129,7 +133,7 @@ const SignUp: React.FC = () => {
         return;
       }
 
-      const source = { uri: response.uri };
+      // const source = { uri: response.uri };
 
       const data = new FormData();
 
@@ -167,7 +171,7 @@ const SignUp: React.FC = () => {
               <Title>Meu perfil</Title>
             </View>
 
-            <Form initialData={user} ref={formRef} onSubmit={handleSignUp}>
+            <Form initialData={user} ref={formRef} onSubmit={handleSubmit}>
               <Input
                 autoCapitalize="words"
                 name="name"
@@ -195,7 +199,7 @@ const SignUp: React.FC = () => {
                 ref={inputOldPasswordRef}
                 secureTextEntry
                 textContentType="newPassword"
-                name="password"
+                name="oldPassword"
                 icon="lock"
                 placeholder="Senha atual"
                 returnKeyType="next"
@@ -208,7 +212,7 @@ const SignUp: React.FC = () => {
               <Input
                 ref={inputNewPasswordRef}
                 secureTextEntry
-                textContentType="newPassword"
+                textContentType="password"
                 name="password"
                 icon="lock"
                 placeholder="Nova senha"
@@ -221,8 +225,8 @@ const SignUp: React.FC = () => {
               <Input
                 ref={inputConfirmPasswordRef}
                 secureTextEntry
-                textContentType="newPassword"
-                name="password"
+                textContentType="password"
+                name="passwordConfirmation"
                 icon="lock"
                 placeholder="Repita nova senha"
                 returnKeyType="send"
