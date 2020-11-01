@@ -1,4 +1,4 @@
-# gobarber-frontend
+# gobarber-mobile
  Project made for learning purposes.
 
 ## Built with
